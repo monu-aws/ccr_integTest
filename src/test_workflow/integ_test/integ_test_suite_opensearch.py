@@ -106,7 +106,7 @@ class IntegTestSuiteOpenSearch(IntegTestSuite):
                           ) as (endpoint2 ,port2):
                               os.chdir(self.work_dir)
                               self.pretty_print_message("Running integration tests for " + self.component.name)
-                              return self.multi_execute_integtest_sh(endpoint1, port1,endpoint2, port2, security, config)
+                              return self.multi_execute_integtest_sh(endpoint1, port1, endpoint2, port2, security, config)
         with LocalTestCluster.create(
             self.dependency_installer,
             self.work_dir,
