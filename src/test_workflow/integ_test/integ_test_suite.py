@@ -97,7 +97,6 @@ class IntegTestSuite(abc.ABC):
             logging.info(f"{script} does not exist. Skipping integ tests for {self.component.name}")
             return 0
 
-
     def multi_execute_integtest_sh(self, endpoint1: str, port1:int , endpoint2:str, port2: int, security: bool, test_config: str) -> int:
             print("integ Test suite opensearch Execute integtest")
         # here
@@ -127,9 +126,6 @@ class IntegTestSuite(abc.ABC):
                 logging.info(f"{script} does not exist. Skipping integ tests for {self.component.name}")
                 return 0
 
-
-
-	
     def is_security_enabled(self, config: str) -> bool:
         if config in ["with-security", "without-security"]:
             return True if config == "with-security" else False

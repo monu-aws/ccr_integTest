@@ -34,7 +34,7 @@ class LocalTestCluster(TestCluster):
         security_enabled: bool,
         component_test_config: str,
         test_recorder: TestRecorder,
-		xport=9200
+        xport=9200
     ) -> None:
         super().__init__(
             work_dir,
@@ -43,7 +43,7 @@ class LocalTestCluster(TestCluster):
             security_enabled,
             additional_cluster_config,
             test_recorder.local_cluster_logs,
-			xport
+            xport
         )
 
         self.xport=xport
@@ -57,7 +57,7 @@ class LocalTestCluster(TestCluster):
             self.security_enabled,
             self.dependency_installer,
             self.work_dir,
-			self.xport
+            self.xport
         )
 
     @property
