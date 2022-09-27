@@ -97,7 +97,7 @@ class IntegTestSuite(abc.ABC):
             logging.info(f"{script} does not exist. Skipping integ tests for {self.component.name}")
             return 0
 
-    def multi_execute_integtest_sh(self, endpoint: str, port: int, security: bool, test_config: str) -> int:
+    def multi_execute_integtest_sh(self, endpoint1: str, port1: int, endpoint2: str, port2: int, security: bool, test_config: str) -> int:
         script = ScriptFinder.find_integ_test_script(self.component.name, self.repo.working_directory)
         if os.path.exists(script):
             cmd = f"{script} -m {endpoint1} -n {port1} -x {endpoint2} -y {port2}  -s {str(security).lower()} -v {self.bundle_manifest.build.version}"
@@ -121,7 +121,6 @@ class IntegTestSuite(abc.ABC):
         else:
             logging.info(f"{script} does not exist. Skipping integ tests for {self.component.name}")
             return 0
-
 
     def is_security_enabled(self, config: str) -> bool:
         if config in ["with-security", "without-security"]:
