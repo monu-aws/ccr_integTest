@@ -77,9 +77,9 @@ class IntegTestSuiteOpenSearch(IntegTestSuite):
             logging.info(f"topology config found: {self.topology}")
             if(self.topology == "multi-cluster"):
                 if self.additional_cluster_config is None:
-                    self.additional_cluster_config = {"cluster.name":"opensearch1"}
+                    self.additional_cluster_config = {"cluster.name": "opensearch1"}
                 self.additional_cluster_config['cluster.name'] = "opensearch"
-                    self.additional_cluster_config['http.port'] = 9200
+                self.additional_cluster_config['http.port'] = 9200
                 with LocalTestCluster.create(
                     self.dependency_installer,
                     self.work_dir,
