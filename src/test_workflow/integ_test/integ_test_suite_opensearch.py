@@ -71,6 +71,52 @@ class IntegTestSuiteOpenSearch(IntegTestSuite):
         if "additional-cluster-configs" in self.test_config.integ_test.keys():
             self.additional_cluster_config = self.test_config.integ_test.get("additional-cluster-configs")
             logging.info(f"Additional config found: {self.additional_cluster_config}")
+
+
+        if "topology" in self.test_config.integ_test.keys():
+            self.topology = self.test_config.integ_test.get("topology")
+            logging.info(f"topology config found: {self.topology}")
+            if(self.topology == "multi-cluster"):
+                        logging.info(f"Will run multi test cluster")
+                        if self.additional_cluster_config is None:
+                          self.additional_cluster_config={"cluster.name":"opensearch"}
+                        self.additional_cluster_config['cluster.name']="opensearch"
+                        self.additional_cluster_config['http.port']=9200
+                        logging.info(f"Additional config found: {self.additional_cluster_config}")
+                        print("Creating cluster 1")
+
+                        with LocalTestCluster.create(
+                            self.dependency_installer,
+                            self.work_dir,
+                            self.component.name,
+                            self.additional_cluster_config,
+                            self.bundle_manifest,
+                            security,
+                            config,
+                            self.test_recorder,
+                             9200,
+                        ) as (endpoint1, port1):
+                          print("Local cluster1 returned : ", endpoint1, " " ,port1)
+                          self.additional_cluster_config['cluster.name']="follower"
+                          self.additional_cluster_config['http.port']=9201
+                          logging.info(f"Additional config found: {self.additional_cluster_config}")
+                          with LocalTestCluster.create(
+                              self.dependency_installer,
+                              self.work_dir,
+                              self.component.name,
+                              self.additional_cluster_config,
+                              self.bundle_manifest,
+                              security,
+                              config,
+                              self.test_recorder,
+                              9201
+                          ) as (endpoint2 ,port2):
+                              print("Local cluster returned : ", endpoint2," ",port2)
+                              os.chdir(self.work_dir)
+                              self.pretty_print_message("Running integration tests for " + self.component.name)
+                              return self.multi_execute_integtest_sh(endpoint1, port1,endpoint2, port2, security, config)
+
+
         with LocalTestCluster.create(
             self.dependency_installer,
             self.work_dir,
@@ -79,7 +125,7 @@ class IntegTestSuiteOpenSearch(IntegTestSuite):
             self.bundle_manifest,
             security,
             config,
-            self.test_recorder,
+            self.test_recorder
         ) as (endpoint, port):
             self.pretty_print_message("Running integration tests for " + self.component.name)
             os.chdir(self.work_dir)

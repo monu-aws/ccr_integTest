@@ -61,6 +61,7 @@ class TestManifest(ComponentManifest['TestManifest', 'TestComponents']):
                         "type": "dict",
                         "schema": {
                             "build-dependencies": {"type": "list"},
+                            "topology": {"type": "string","required": False },
                             "test-configs": {"type": "list", "allowed": ["with-security", "without-security"]},
                             "additional-cluster-configs": {"type": "dict"},
                         },
@@ -137,3 +138,4 @@ TestManifest.VERSIONS = {"1.0": TestManifest}
 
 TestComponent.__test__ = False  # type: ignore[attr-defined]
 TestManifest.__test__ = False  # type: ignore[attr-defined]
+

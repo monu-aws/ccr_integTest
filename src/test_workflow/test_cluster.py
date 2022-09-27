@@ -36,9 +36,10 @@ class TestCluster(abc.ABC):
         component_test_config: str,
         security_enabled: bool,
         additional_cluster_config: dict,
-        save_logs: LogRecorder
+        save_logs: LogRecorder,
+		xport=9200
     ) -> None:
-        self.work_dir = os.path.join(work_dir, "local-test-cluster")
+        self.work_dir = os.path.join(work_dir, "local-test-cluster"+f"{xport}")
         self.component_name = component_name
         self.component_test_config = component_test_config
         self.security_enabled = security_enabled
@@ -60,6 +61,7 @@ class TestCluster(abc.ABC):
             cluster.start()
             yield cluster.endpoint, cluster.port
         finally:
+            print("Terminating service")
             cluster.terminate()
 
     def start(self) -> None:
