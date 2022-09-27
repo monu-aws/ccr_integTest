@@ -97,34 +97,31 @@ class IntegTestSuite(abc.ABC):
             logging.info(f"{script} does not exist. Skipping integ tests for {self.component.name}")
             return 0
 
-    def multi_execute_integtest_sh(self, endpoint1: str, port1:int , endpoint2:str, port2: int, security: bool, test_config: str) -> int:
-            print("integ Test suite opensearch Execute integtest")
-        # here
-            script = ScriptFinder.find_integ_test_script(self.component.name, self.repo.working_directory)
-            if os.path.exists(script):
-                cmd = f"{script} -m {endpoint1} -n {port1} -x {endpoint2} -y {port2}  -s {str(security).lower()} -v {self.bundle_manifest.build.version}"
-                self.repo_work_dir = os.path.join(
-                    self.repo.dir, self.test_config.working_directory) if self.test_config.working_directory is not None else self.repo.dir
-                (status, stdout, stderr) = execute(cmd, self.repo_work_dir, True, False)
-
-                test_result_data = TestResultData(
-                    self.component.name,
-                    test_config,
-                    status,
-                    stdout,
-                    stderr,
-                    self.test_artifact_files
-                )
-
-                self.save_logs.save_test_result_data(test_result_data)
-                print("Inside integ test suite")
-                if stderr:
-                    logging.info("Integration test run failed for component " + self.component.name)
-                    logging.info(stderr)
-                return status
-            else:
-                logging.info(f"{script} does not exist. Skipping integ tests for {self.component.name}")
-                return 0
+    def multi_execute_integtest_sh(self, endpoint1: str, port1: int, endpoint2: str, port2: int, security: bool, test_config: str) -> int:
+        print("integ Test suite opensearch Execute integtest")
+        script = ScriptFinder.find_integ_test_script(self.component.name, self.repo.working_directory)
+        if os.path.exists(script):
+            cmd = f"{script} -m {endpoint1} -n {port1} -x {endpoint2} -y {port2}  -s {str(security).lower()} -v {self.bundle_manifest.build.version}"
+            self.repo_work_dir = os.path.join(
+                self.repo.dir, self.test_config.working_directory) if self.test_config.working_directory is not None else self.repo.dir
+            (status, stdout, stderr) = execute(cmd, self.repo_work_dir, True, False)
+            test_result_data = TestResultData(
+                self.component.name,
+                test_config,
+                status,
+                stdout,
+                stderr,
+                self.test_artifact_files
+            )
+            self.save_logs.save_test_result_data(test_result_data)
+            print("Inside integ test suite")
+            if stderr:
+                logging.info("Integration test run failed for component " + self.component.name)
+                logging.info(stderr)
+            return status
+         else:
+            logging.info(f"{script} does not exist. Skipping integ tests for {self.component.name}")
+            return 0
 
     def is_security_enabled(self, config: str) -> bool:
         if config in ["with-security", "without-security"]:

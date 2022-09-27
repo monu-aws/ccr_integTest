@@ -46,7 +46,7 @@ class LocalTestCluster(TestCluster):
             xport
         )
 
-        self.xport=xport
+        self.xport = xport
         self.manifest = bundle_manifest
         self.dependency_installer = dependency_installer
 

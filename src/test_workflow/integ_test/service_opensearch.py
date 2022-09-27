@@ -35,7 +35,7 @@ class ServiceOpenSearch(Service):
         xport=9200
     ) -> None:
         super().__init__(work_dir, version, distribution, security_enabled, additional_config, dependency_installer)
-        self.xport=xport
+        self.xport = xport
         self.dist = Distributions.get_distribution("opensearch", distribution, version, work_dir)
         self.dependency_installer = dependency_installer
         self.install_dir = self.dist.install_dir

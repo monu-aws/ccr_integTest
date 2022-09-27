@@ -76,37 +76,37 @@ class IntegTestSuiteOpenSearch(IntegTestSuite):
             self.topology = self.test_config.integ_test.get("topology")
             logging.info(f"topology config found: {self.topology}")
             if(self.topology == "multi-cluster"):
-                        if self.additional_cluster_config is None:
-                          self.additional_cluster_config={"cluster.name":"opensearch"}
-                        self.additional_cluster_config['cluster.name']="opensearch"
-                        self.additional_cluster_config['http.port']=9200
-                        with LocalTestCluster.create(
-                            self.dependency_installer,
-                            self.work_dir,
-                            self.component.name,
-                            self.additional_cluster_config,
-                            self.bundle_manifest,
-                            security,
-                            config,
-                            self.test_recorder,
-                             9200,
-                        ) as (endpoint1, port1):
-                          self.additional_cluster_config['cluster.name']="follower"
-                          self.additional_cluster_config['http.port']=9201
-                          with LocalTestCluster.create(
-                              self.dependency_installer,
-                              self.work_dir,
-                              self.component.name,
-                              self.additional_cluster_config,
-                              self.bundle_manifest,
-                              security,
-                              config,
-                              self.test_recorder,
-                              9201
-                          ) as (endpoint2 ,port2):
-                              os.chdir(self.work_dir)
-                              self.pretty_print_message("Running integration tests for " + self.component.name)
-                              return self.multi_execute_integtest_sh(endpoint1, port1, endpoint2, port2, security, config)
+                if self.additional_cluster_config is None:
+                    self.additional_cluster_config = {"cluster.name":"opensearch1"}
+                self.additional_cluster_config['cluster.name'] = "opensearch"
+                    self.additional_cluster_config['http.port'] = 9200
+                with LocalTestCluster.create(
+                    self.dependency_installer,
+                    self.work_dir,
+                    self.component.name,
+                    self.additional_cluster_config,
+                    self.bundle_manifest,
+                    security,
+                    config,
+                    self.test_recorder,
+                    9200
+                ) as (endpoint1, port1):
+                    self.additional_cluster_config['cluster.name'] = "opensearch2"
+                    self.additional_cluster_config['http.port'] = 9201
+                    with LocalTestCluster.create(
+                        self.dependency_installer,
+                        self.work_dir,
+                        self.component.name,
+                        self.additional_cluster_config,
+                        self.bundle_manifest,
+                        security,
+                        config,
+                        self.test_recorder,
+                        9201
+                    ) as (endpoint2, port2):
+                        os.chdir(self.work_dir)
+                        self.pretty_print_message("Running integration tests for " + self.component.name)
+                        return self.multi_execute_integtest_sh(endpoint1, port1, endpoint2, port2, security, config)
         with LocalTestCluster.create(
             self.dependency_installer,
             self.work_dir,
