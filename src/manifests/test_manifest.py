@@ -61,7 +61,7 @@ class TestManifest(ComponentManifest['TestManifest', 'TestComponents']):
                         "type": "dict",
                         "schema": {
                             "build-dependencies": {"type": "list"},
-                            "topology": {"type": "string","required": False},
+                            "topology": {"type": "string", "required": False},
                             "test-configs": {"type": "list", "allowed": ["with-security", "without-security"]},
                             "additional-cluster-configs": {"type": "dict"},
                         },
