@@ -32,7 +32,7 @@ class ServiceOpenSearch(Service):
         security_enabled: bool,
         dependency_installer: DependencyInstaller,
         work_dir: str,
-        xport=9200
+        xport: int = 9200
     ) -> None:
         super().__init__(work_dir, version, distribution, security_enabled, additional_config, dependency_installer)
         self.xport = xport

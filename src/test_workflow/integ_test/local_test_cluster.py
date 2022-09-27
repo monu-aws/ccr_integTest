@@ -34,7 +34,7 @@ class LocalTestCluster(TestCluster):
         security_enabled: bool,
         component_test_config: str,
         test_recorder: TestRecorder,
-        xport=9200
+        xport: int = 9200
     ) -> None:
         super().__init__(
             work_dir,
