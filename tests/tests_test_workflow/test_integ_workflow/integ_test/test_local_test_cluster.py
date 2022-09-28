@@ -48,7 +48,8 @@ class LocalTestClusterTests(unittest.TestCase):
             self.manifest,
             self.security_enabled,
             self.component_test_config,
-            mock_test_recorder
+            mock_test_recorder,
+            9200
         )
 
         cluster.start()
