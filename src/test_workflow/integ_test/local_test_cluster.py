@@ -34,7 +34,7 @@ class LocalTestCluster(TestCluster):
         security_enabled: bool,
         component_test_config: str,
         test_recorder: TestRecorder,
-        xport: int = 9200
+        cluster_port: int = 9200
     ) -> None:
         super().__init__(
             work_dir,
@@ -43,10 +43,10 @@ class LocalTestCluster(TestCluster):
             security_enabled,
             additional_cluster_config,
             test_recorder.local_cluster_logs,
-            xport
+            cluster_port
         )
 
-        self.xport = xport
+        self.cluster_port = cluster_port
         self.manifest = bundle_manifest
         self.dependency_installer = dependency_installer
 
@@ -57,7 +57,7 @@ class LocalTestCluster(TestCluster):
             self.security_enabled,
             self.dependency_installer,
             self.work_dir,
-            self.xport
+            self.cluster_port
         )
 
     @property
@@ -70,4 +70,4 @@ class LocalTestCluster(TestCluster):
 
     @property
     def port(self) -> int:
-        return self.xport
+        return self.cluster_port

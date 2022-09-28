@@ -73,38 +73,21 @@ class IntegTestSuite(abc.ABC):
         pass
 
     def execute_integtest_sh(self, endpoint: str, port: int, security: bool, test_config: str) -> int:
+        cluster_endpoint_port = {"endpoint": endpoint, "port": port}
+        cluster_endpoints = [cluster_endpoint_port]
+        return multi_execute_integtest_sh(self, cluster_endpoints, security, test_config)
+
+    def multi_execute_integtest_sh(self, cluster_endpoints: list, security: bool, test_config: str) -> int:
         script = ScriptFinder.find_integ_test_script(self.component.name, self.repo.working_directory)
         if os.path.exists(script):
-            cmd = f"{script} -b {endpoint} -p {port} -s {str(security).lower()} -v {self.bundle_manifest.build.version}"
+            cmd = f"{script} -s {str(security).lower()} -v {self.bundle_manifest.build.version} "
+            if len(cluster_endpoints) == 1 :
+                cmd = cmd + f" -b {cluster_endpoints[0]['endpoint']} -p {cluster_endpoints[0]['port']} "
+            else:
+                cmd = cmd + f" -m {cluster_endpoints[0]['endpoint']} -n {cluster_endpoints[0]['port']} -x {cluster_endpoints[1]['endpoint']} -y {cluster_endpoints[1]['port']} "
             self.repo_work_dir = os.path.join(
-                self.repo.dir, self.test_config.working_directory) if self.test_config.working_directory is not None else self.repo.dir
+                    self.repo.dir, self.test_config.working_directory) if self.test_config.working_directory is not None else self.repo.dir
             (status, stdout, stderr) = execute(cmd, self.repo_work_dir, True, False)
-
-            test_result_data = TestResultData(
-                self.component.name,
-                test_config,
-                status,
-                stdout,
-                stderr,
-                self.test_artifact_files
-            )
-            self.save_logs.save_test_result_data(test_result_data)
-            if stderr:
-                logging.info("Integration test run failed for component " + self.component.name)
-                logging.info(stderr)
-            return status
-        else:
-            logging.info(f"{script} does not exist. Skipping integ tests for {self.component.name}")
-            return 0
-
-    def multi_execute_integtest_sh(self, endpoint1: str, port1: int, endpoint2: str, port2: int, security: bool, test_config: str) -> int:
-        script = ScriptFinder.find_integ_test_script(self.component.name, self.repo.working_directory)
-        if os.path.exists(script):
-            cmd = f"{script} -m {endpoint1} -n {port1} -x {endpoint2} -y {port2}  -s {str(security).lower()} -v {self.bundle_manifest.build.version}"
-            self.repo_work_dir = os.path.join(
-                self.repo.dir, self.test_config.working_directory) if self.test_config.working_directory is not None else self.repo.dir
-            (status, stdout, stderr) = execute(cmd, self.repo_work_dir, True, False)
-
             test_result_data = TestResultData(
                 self.component.name,
                 test_config,

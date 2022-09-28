@@ -37,7 +37,7 @@ class TestCluster(abc.ABC):
         security_enabled: bool,
         additional_cluster_config: dict,
         save_logs: LogRecorder,
-        xport: int = 9200
+        cluster_port: int = 9200
     ) -> None:
         self.work_dir = os.path.join(work_dir, "local-test-cluster")
         self.component_name = component_name
@@ -45,7 +45,6 @@ class TestCluster(abc.ABC):
         self.security_enabled = security_enabled
         self.additional_cluster_config = additional_cluster_config
         self.save_logs = save_logs
-
         self.all_services = []
         self.termination_result = None
 
