@@ -81,13 +81,14 @@ class IntegTestSuite(abc.ABC):
         script = ScriptFinder.find_integ_test_script(self.component.name, self.repo.working_directory)
         if os.path.exists(script):
             cmd = f"{script} -s {str(security).lower()} -v {self.bundle_manifest.build.version} "
-            if len(cluster_endpoints) == 1 :
+            if len(cluster_endpoints) == 1:
                 cmd = cmd + f" -b {cluster_endpoints[0]['endpoint']} -p {cluster_endpoints[0]['port']} "
             else:
                 cmd = cmd + f" -m {cluster_endpoints[0]['endpoint']} -n {cluster_endpoints[0]['port']} -x {cluster_endpoints[1]['endpoint']} -y {cluster_endpoints[1]['port']} "
             self.repo_work_dir = os.path.join(
                     self.repo.dir, self.test_config.working_directory) if self.test_config.working_directory is not None else self.repo.dir
             (status, stdout, stderr) = execute(cmd, self.repo_work_dir, True, False)
+
             test_result_data = TestResultData(
                 self.component.name,
                 test_config,
