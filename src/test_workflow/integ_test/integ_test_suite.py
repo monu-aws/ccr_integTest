@@ -104,7 +104,7 @@ class IntegTestSuite(abc.ABC):
     def execute_integtest_sh(self, endpoint: str, port: int, security: bool, test_config: str) -> int:
         cluster_endpoint_port = {"endpoint": endpoint, "port": port}
         cluster_endpoints = [cluster_endpoint_port]
-        return multi_execute_integtest_sh(self, cluster_endpoints, security, test_config)
+        return self.multi_execute_integtest_sh(cluster_endpoints, security, test_config)
 
     def is_security_enabled(self, config: str) -> bool:
         if config in ["with-security", "without-security"]:
