@@ -72,11 +72,6 @@ class IntegTestSuite(abc.ABC):
     def execute_tests(self) -> TestComponentResults:
         pass
 
-    def execute_integtest_sh(self, endpoint: str, port: int, security: bool, test_config: str) -> int:
-        cluster_endpoint_port = {"endpoint": endpoint, "port": port}
-        cluster_endpoints = [cluster_endpoint_port]
-        return multi_execute_integtest_sh(self, cluster_endpoints, security, test_config)
-
     def multi_execute_integtest_sh(self, cluster_endpoints: list, security: bool, test_config: str) -> int:
         script = ScriptFinder.find_integ_test_script(self.component.name, self.repo.working_directory)
         if os.path.exists(script):
@@ -86,7 +81,7 @@ class IntegTestSuite(abc.ABC):
             else:
                 cmd = cmd + f" -m {cluster_endpoints[0]['endpoint']} -n {cluster_endpoints[0]['port']} -x {cluster_endpoints[1]['endpoint']} -y {cluster_endpoints[1]['port']} "
             self.repo_work_dir = os.path.join(
-                    self.repo.dir, self.test_config.working_directory) if self.test_config.working_directory is not None else self.repo.dir
+                self.repo.dir, self.test_config.working_directory) if self.test_config.working_directory is not None else self.repo.dir
             (status, stdout, stderr) = execute(cmd, self.repo_work_dir, True, False)
 
             test_result_data = TestResultData(
@@ -105,6 +100,11 @@ class IntegTestSuite(abc.ABC):
         else:
             logging.info(f"{script} does not exist. Skipping integ tests for {self.component.name}")
             return 0
+
+    def execute_integtest_sh(self, endpoint: str, port: int, security: bool, test_config: str) -> int:
+        cluster_endpoint_port = {"endpoint": endpoint, "port": port}
+        cluster_endpoints = [cluster_endpoint_port]
+        return multi_execute_integtest_sh(self, cluster_endpoints, security, test_config)
 
     def is_security_enabled(self, config: str) -> bool:
         if config in ["with-security", "without-security"]:
