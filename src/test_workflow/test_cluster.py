@@ -39,7 +39,7 @@ class TestCluster(abc.ABC):
         save_logs: LogRecorder,
         xport: int = 9200
     ) -> None:
-        self.work_dir = os.path.join(work_dir, "local-test-cluster" + f"{xport}")
+        self.work_dir = os.path.join(work_dir, "local-test-cluster")
         self.component_name = component_name
         self.component_test_config = component_test_config
         self.security_enabled = security_enabled
