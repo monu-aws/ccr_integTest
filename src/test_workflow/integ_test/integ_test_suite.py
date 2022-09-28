@@ -78,7 +78,8 @@ class IntegTestSuite(abc.ABC):
             if len(cluster_endpoints) == 1:
                 cmd = cmd = f"{script} -b {cluster_endpoints[0]['endpoint']} -p {cluster_endpoints[0]['port']} -s {str(security).lower()} -v {self.bundle_manifest.build.version}"
             else:
-                cmd = f"{script} -m {cluster_endpoints[0]['endpoint']} -n {cluster_endpoints[0]['port']} -x {cluster_endpoints[1]['endpoint']} -y {cluster_endpoints[1]['port']} -s {str(security).lower()} -v {self.bundle_manifest.build.version}"
+                cmd = f"{script} -m {cluster_endpoints[0]['endpoint']} -n {cluster_endpoints[0]['port']} -x {cluster_endpoints[1]['endpoint']} -y {cluster_endpoints[1]['port']}"
+                cmd = cmd + f" -s {str(security).lower()} -v {self.bundle_manifest.build.version}"
             self.repo_work_dir = os.path.join(
                 self.repo.dir, self.test_config.working_directory) if self.test_config.working_directory is not None else self.repo.dir
             (status, stdout, stderr) = execute(cmd, self.repo_work_dir, True, False)
