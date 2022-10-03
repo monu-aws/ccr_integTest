@@ -10,14 +10,14 @@ import os
 from pathlib import Path
 from typing import Any
 
-from manifests.build_manifest import BuildManifest
 from manifests.bundle_manifest import BundleManifest
+from test_workflow.test_result.test_result import TestResult
 from test_workflow.dependency_installer_opensearch import DependencyInstallerOpenSearch
+from test_workflow.test_result.test_component_results import TestComponentResults
 from test_workflow.integ_test.integ_test_suite import IntegTestSuite, InvalidTestConfigError
 from test_workflow.integ_test.topology import Topology
 from test_workflow.test_recorder.test_recorder import TestRecorder
-from test_workflow.test_result.test_component_results import TestComponentResults
-from test_workflow.test_result.test_result import TestResult
+from manifests.build_manifest import BuildManifest
 
 class IntegTestSuiteOpenSearch(IntegTestSuite):
     dependency_installer: DependencyInstallerOpenSearch
