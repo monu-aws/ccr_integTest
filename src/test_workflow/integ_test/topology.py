@@ -1,17 +1,18 @@
+# Copyright OpenSearch Contributors
 # SPDX-License-Identifier: Apache-2.0
 #
 # The OpenSearch Contributors require contributions made to
 # this file be licensed under the Apache-2.0 license or a
 # compatible open source license.
 
+import os
+from typing import Generator, List
+from contextlib import contextmanager
 
 from test_workflow.dependency_installer import DependencyInstaller
 from test_workflow.test_recorder.test_recorder import TestRecorder
 from manifests.bundle_manifest import BundleManifest
-from typing import Generator, List
-from contextlib import contextmanager
 from test_workflow.integ_test.local_test_cluster import LocalTestCluster
-import os
 
 
 class Topology:
