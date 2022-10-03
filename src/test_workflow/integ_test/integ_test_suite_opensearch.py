@@ -18,7 +18,7 @@ from test_workflow.integ_test.local_test_cluster import LocalTestCluster
 from test_workflow.test_recorder.test_recorder import TestRecorder
 from test_workflow.test_result.test_component_results import TestComponentResults
 from test_workflow.test_result.test_result import TestResult
-
+from test_workflow.integ_test.topology import Topology
 
 class IntegTestSuiteOpenSearch(IntegTestSuite):
     dependency_installer: DependencyInstallerOpenSearch
@@ -71,44 +71,14 @@ class IntegTestSuiteOpenSearch(IntegTestSuite):
         if "additional-cluster-configs" in self.test_config.integ_test.keys():
             self.additional_cluster_config = self.test_config.integ_test.get("additional-cluster-configs")
             logging.info(f"Additional config found: {self.additional_cluster_config}")
-
+        if self.additional_cluster_config is None:
+            self.additional_cluster_config = {"cluster.name": "opensearch1"}
         if "topology" in self.test_config.integ_test.keys():
             self.topology = self.test_config.integ_test.get("topology")
-            logging.info(f"topology config found: {self.topology}")
-            if(self.topology == "multi-cluster"):
-                if self.additional_cluster_config is None:
-                    self.additional_cluster_config = {"cluster.name": "opensearch1"}
-                self.additional_cluster_config['cluster.name'] = "opensearch1"
-                self.additional_cluster_config['http.port'] = 9200
-                with LocalTestCluster.create(
-                    self.dependency_installer,
-                    os.path.join(self.work_dir, "1"),
-                    self.component.name,
-                    self.additional_cluster_config,
-                    self.bundle_manifest,
-                    security,
-                    config,
-                    self.test_recorder,
-                    9200
-                ) as (endpoint1, port1):
-                    self.additional_cluster_config['cluster.name'] = "opensearch2"
-                    self.additional_cluster_config['http.port'] = 9201
-                    with LocalTestCluster.create(
-                        self.dependency_installer,
-                        os.path.join(self.work_dir, "2"),
-                        self.component.name,
-                        self.additional_cluster_config,
-                        self.bundle_manifest,
-                        security,
-                        config,
-                        self.test_recorder,
-                        9201
-                    ) as (endpoint2, port2):
-                        os.chdir(self.work_dir)
-                        self.pretty_print_message("Running integration tests for " + self.component.name)
-                        cluster_endpoints = [{"endpoint": endpoint1, "port": port1}, {"endpoint": endpoint2, "port": port2}]
-                        return self.multi_execute_integtest_sh(cluster_endpoints, security, config)
-        with LocalTestCluster.create(
+        else:
+            self.topology = 1
+        with Topology.create(
+            self.topology,
             self.dependency_installer,
             self.work_dir,
             self.component.name,
@@ -117,10 +87,10 @@ class IntegTestSuiteOpenSearch(IntegTestSuite):
             security,
             config,
             self.test_recorder
-        ) as (endpoint, port):
-            self.pretty_print_message("Running integration tests for " + self.component.name)
+        ) as (endpoints):
             os.chdir(self.work_dir)
-            return self.execute_integtest_sh(endpoint, port, security, config)
+            self.pretty_print_message("Running integration tests for " + self.component.name)
+            return self.multi_execute_integtest_sh(endpoints, security, config)
 
     @property
     def test_artifact_files(self) -> dict:

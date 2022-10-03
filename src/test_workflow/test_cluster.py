@@ -62,6 +62,12 @@ class TestCluster(abc.ABC):
         finally:
             cluster.terminate()
 
+    @classmethod
+    def create_cluster(cls, *args: Any) -> Any:
+        cluster = cls(*args)
+        cluster.start()
+        return cluster
+
     def start(self) -> None:
         os.makedirs(self.work_dir, exist_ok=True)
 
