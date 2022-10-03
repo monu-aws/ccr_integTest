@@ -6,13 +6,13 @@
 # compatible open source license.
 
 import os
-from typing import Generator, List
 from contextlib import contextmanager
+from typing import Generator, List
 
-from test_workflow.dependency_installer import DependencyInstaller
-from test_workflow.test_recorder.test_recorder import TestRecorder
 from manifests.bundle_manifest import BundleManifest
+from test_workflow.dependency_installer import DependencyInstaller
 from test_workflow.integ_test.local_test_cluster import LocalTestCluster
+from test_workflow.test_recorder.test_recorder import TestRecorder
 
 
 class Topology:
