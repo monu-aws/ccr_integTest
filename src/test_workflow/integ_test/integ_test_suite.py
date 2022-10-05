@@ -79,14 +79,13 @@ class IntegTestSuite(abc.ABC):
                 cmd = cmd = f"{script} -b {cluster_endpoints[0]['endpoint']} -p {cluster_endpoints[0]['port']} -s {str(security).lower()} -v {self.bundle_manifest.build.version}"
             else:
                 cmd = f"{script} -e "
-                for connection_details in cluster_endpoints:
-                    cmd = cmd + f"{connection_details['endpoint']}:{connection_details['port']},"
+                for i in range(len(cluster_endpoints)):
+                    cmd = cmd + f"{cluster_endpoints[i]['endpoint']}:{cluster_endpoints[i]['port']}:{cluster_endpoints[i]['transport']},"
                 cmd = cmd[:-1]
                 cmd = cmd + f" -s {str(security).lower()} -v {self.bundle_manifest.build.version}"
             self.repo_work_dir = os.path.join(
                 self.repo.dir, self.test_config.working_directory) if self.test_config.working_directory is not None else self.repo.dir
             (status, stdout, stderr) = execute(cmd, self.repo_work_dir, True, False)
-
             test_result_data = TestResultData(
                 self.component.name,
                 test_config,

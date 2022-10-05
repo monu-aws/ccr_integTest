@@ -7,6 +7,7 @@
 
 import os
 from contextlib import contextmanager
+from pathlib import Path
 from typing import Generator, List
 
 from manifests.bundle_manifest import BundleManifest
@@ -23,7 +24,7 @@ class Topology:
             cls,
             number_of_cluster: int,
             dependency_installer: DependencyInstaller,
-            work_dir: str,
+            work_dir: Path,
             component_name: str,
             additional_cluster_config: dict,
             bundle_manifest: BundleManifest,
@@ -51,7 +52,7 @@ class Topology:
                         cluster_port)
                 )
             for i in range(number_of_cluster):
-                endpoints_list.append({"endpoint": clusters[i].endpoint, "port": clusters[i].port})
+                endpoints_list.append({"endpoint": clusters[i].endpoint, "port": clusters[i].port, "transport": 9300 + i})
             yield endpoints_list
         finally:
             for cluster in clusters:
